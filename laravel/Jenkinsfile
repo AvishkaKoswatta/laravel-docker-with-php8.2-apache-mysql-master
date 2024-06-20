@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    options {
+        skipDefaultCheckout(true)
+    }
     environment {
         DOCKER_IMAGE = 'php:8.2-apache'
         CONTAINER_NAME = 'laravel-app'
