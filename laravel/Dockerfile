@@ -3,7 +3,7 @@ FROM php:8.2-apache
 
 # Set environment variables.
 ENV ACCEPT_EULA=Y
-LABEL maintainer="er.avinashrathod@gmail.com"
+LABEL maintainer="avishkakkoswaththa@gmail.com"
 
 # Install system dependencies.
 RUN apt-get update && apt-get install -y \
