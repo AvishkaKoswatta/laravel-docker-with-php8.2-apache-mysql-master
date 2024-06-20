@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'php:8.2-apache'
+        CONTAINER_NAME = 'laravel-app'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/AvishkaKoswatta/laravel-docker-with-php8.2-apache-mysql-master.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    docker.build(env.DOCKER_IMAGE)
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Add your Laravel tests execution command here
+                sh 'docker run --rm ${env.DOCKER_IMAGE} php artisan test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Push the built Docker image to your registry or deploy it to your server
+                // Example: docker.push(env.DOCKER_IMAGE)
+                sh "docker-compose up -d"
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up any Docker containers or images after the pipeline completes
+            sh 'docker stop ${env.CONTAINER_NAME} || true'
+            sh 'docker rm ${env.CONTAINER_NAME} || true'
+            sh 'docker rmi ${env.DOCKER_IMAGE} || true'
+        }
+    }
+}
